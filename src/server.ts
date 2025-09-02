@@ -7,6 +7,7 @@ import userRoutes from "./routes/userRoutes.js";
 import rateLimitRoutes from "./routes/rateLimitRoutes.js";
 import conversionRoutes from "./routes/conversionRoutes.js";
 import ocrRoutes from "./routes/ocrRoutes.js";
+import compressionRoutes from "./routes/compressionRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,9 @@ app.use("/api/convert", conversionRoutes);
 
 // Rotas de OCR
 app.use("/api/ocr", ocrRoutes);
+
+// Rotas de compressão
+app.use("/api/compress", compressionRoutes);
 
 const PORT = process.env.PORT || 3000;
 

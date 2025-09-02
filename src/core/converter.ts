@@ -24,6 +24,15 @@ export interface OCRResult {
   error?: string;
 }
 
+export interface CompressionResult {
+  success: boolean;
+  outputPath?: string;
+  originalSize?: number;
+  compressedSize?: number;
+  compressionRatio?: number;
+  error?: string;
+}
+
 export class FileConverter {
   private static readonly TEMP_DIR = path.join(process.cwd(), 'temp');
 
@@ -229,6 +238,84 @@ export class FileConverter {
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Erro desconhecido durante OCR'
+      };
+    }
+  }
+
+  static async compressPDF(inputPath: string, outputPath?: string, compressionLevel: 'low' | 'medium' | 'high' = 'medium'): Promise<CompressionResult> {
+    try {
+      // Verifica se o arquivo existe
+      await fs.access(inputPath);
+
+      // Verifica se é um PDF
+      const extension = path.extname(inputPath).toLowerCase();
+      if (extension !== '.pdf') {
+        return {
+          success: false,
+          error: `Arquivo deve ser um PDF. Arquivo recebido: ${extension}`
+        };
+      }
+
+      // Lê o arquivo PDF
+      const pdfBytes = await fs.readFile(inputPath);
+      const originalSize = pdfBytes.length;
+
+      // Carrega o documento PDF
+      const pdfDoc = await PDFDocument.load(pdfBytes);
+
+      // Define configurações de compressão baseadas no nível
+      let compressionOptions = {};
+      
+      switch (compressionLevel) {
+        case 'low':
+          compressionOptions = {
+            useObjectStreams: false,
+            addDefaultPage: false
+          };
+          break;
+        case 'medium':
+          compressionOptions = {
+            useObjectStreams: true,
+            addDefaultPage: false
+          };
+          break;
+        case 'high':
+          compressionOptions = {
+            useObjectStreams: true,
+            addDefaultPage: false,
+            updateFieldAppearances: false
+          };
+          break;
+      }
+
+      // Serializa o PDF com compressão
+      const compressedPdfBytes = await pdfDoc.save(compressionOptions);
+      const compressedSize = compressedPdfBytes.length;
+
+      // Calcula taxa de compressão
+      const compressionRatio = ((originalSize - compressedSize) / originalSize) * 100;
+
+      // Define caminho de saída se não fornecido
+      if (!outputPath) {
+        const parsedPath = path.parse(inputPath);
+        outputPath = path.join(this.TEMP_DIR, `${parsedPath.name}_compressed_${Date.now()}.pdf`);
+      }
+
+      // Salva o arquivo comprimido
+      await fs.writeFile(outputPath, compressedPdfBytes);
+
+      return {
+        success: true,
+        outputPath,
+        originalSize,
+        compressedSize,
+        compressionRatio: Math.round(compressionRatio * 100) / 100
+      };
+
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Erro desconhecido durante compressão'
       };
     }
   }
