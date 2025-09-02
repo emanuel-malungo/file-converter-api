@@ -12,6 +12,7 @@ model User {
   email     String   @unique
   apiKey    String   @unique
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   requests  Request[]
 }
 
@@ -20,6 +21,5 @@ model Request {
   userId    Int
   endpoint  String
   createdAt DateTime @default(now())
-
   user User @relation(fields: [userId], references: [id])
 }

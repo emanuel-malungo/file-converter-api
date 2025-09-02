@@ -1,11 +1,14 @@
 import express from "express"
 import cors from "cors"
 import helmet from "helmet"
+import compression from "compression"
 import dotenv from "dotenv"
 
 dotenv.config();
 
 const app = express();
+
+app.use(compression());
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
