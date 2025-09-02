@@ -3,6 +3,7 @@ import path from 'path';
 import mammoth from 'mammoth';
 import { PDFDocument } from 'pdf-lib';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { createWorker } from 'tesseract.js';
 
 export interface ConversionOptions {
   inputPath: string;
@@ -13,6 +14,13 @@ export interface ConversionOptions {
 export interface ConversionResult {
   success: boolean;
   outputPath?: string;
+  error?: string;
+}
+
+export interface OCRResult {
+  success: boolean;
+  text?: string;
+  confidence?: number;
   error?: string;
 }
 
@@ -182,6 +190,46 @@ export class FileConverter {
       await fs.unlink(filePath);
     } catch (error) {
       console.warn(`Erro ao limpar arquivo ${filePath}:`, error);
+    }
+  }
+
+  static async performOCR(imagePath: string, language: string = 'eng'): Promise<OCRResult> {
+    try {
+      // Verifica se o arquivo existe
+      await fs.access(imagePath);
+
+      // Verifica se é uma imagem válida
+      const extension = path.extname(imagePath).toLowerCase();
+      const validExtensions = ['.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp'];
+      
+      if (!validExtensions.includes(extension)) {
+        return {
+          success: false,
+          error: `Formato de imagem não suportado: ${extension}. Formatos aceitos: JPG, PNG, BMP, TIFF, WEBP`
+        };
+      }
+
+      // Cria worker do Tesseract
+      const worker = await createWorker(language);
+      
+      try {
+        // Processa a imagem
+        const result = await worker.recognize(imagePath);
+        
+        return {
+          success: true,
+          text: result.data.text,
+          confidence: result.data.confidence
+        };
+      } finally {
+        // Limpa o worker
+        await worker.terminate();
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Erro desconhecido durante OCR'
+      };
     }
   }
 }

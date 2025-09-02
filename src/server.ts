@@ -6,6 +6,7 @@ import dotenv from "dotenv"
 import userRoutes from "./routes/userRoutes.js";
 import rateLimitRoutes from "./routes/rateLimitRoutes.js";
 import conversionRoutes from "./routes/conversionRoutes.js";
+import ocrRoutes from "./routes/ocrRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -23,6 +24,9 @@ app.use("/api/rate-limit", rateLimitRoutes);
 
 // Rotas de conversão de arquivos
 app.use("/api/convert", conversionRoutes);
+
+// Rotas de OCR
+app.use("/api/ocr", ocrRoutes);
 
 const PORT = process.env.PORT || 3000;
 
