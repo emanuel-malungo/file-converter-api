@@ -30,6 +30,7 @@ prisma/dev.db-journal
 
 # Uploads temporários
 uploads/
+temp/
 
 # IDE / SO
 .vscode/

@@ -1,7 +1,7 @@
-import { validateApiKey } from "../utils/apiKeyUtils";
+import { validateApiKey } from "../utils/apiKeyUtils.js";
 import type { Response, NextFunction } from "express";
-import type { IAuthenticatedRequest } from "../interfaces/IAuthenticatedRequest";
-import prisma from "../config/databse";
+import type { IAuthenticatedRequest } from "../interfaces/IAuthenticatedRequest.js";
+import prisma from "../config/databse.js";
 
 export async function authMiddleware(req: IAuthenticatedRequest, res: Response, next: NextFunction) {
   try {

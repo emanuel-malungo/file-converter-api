@@ -3,8 +3,9 @@ import cors from "cors"
 import helmet from "helmet"
 import compression from "compression"
 import dotenv from "dotenv"
-import userRoutes from "./routes/userRoutes";
-import rateLimitRoutes from "./routes/rateLimitRoutes";
+import userRoutes from "./routes/userRoutes.js";
+import rateLimitRoutes from "./routes/rateLimitRoutes.js";
+import conversionRoutes from "./routes/conversionRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,9 @@ app.use("/api/users", userRoutes);
 
 // Rotas para verificar status do rate limit
 app.use("/api/rate-limit", rateLimitRoutes);
+
+// Rotas de conversão de arquivos
+app.use("/api/convert", conversionRoutes);
 
 const PORT = process.env.PORT || 3000;
 

@@ -1,6 +1,6 @@
 import type { Response, NextFunction } from 'express';
-import prisma from '../config/databse';
-import type { IAuthenticatedRequest } from '../interfaces/IAuthenticatedRequest';
+import prisma from '../config/databse.js';
+import type { IAuthenticatedRequest } from '../interfaces/IAuthenticatedRequest.js';
 
 const MONTHLY_REQUEST_LIMIT = 100;
 

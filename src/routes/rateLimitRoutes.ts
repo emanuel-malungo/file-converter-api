@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { authMiddleware } from '../middlewares/authMiddleware';
-import { getRateLimitStatusController } from '../controllers/rateLimitController';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
+import { getRateLimitStatusController } from '../controllers/rateLimitController.js';
 
 const router = Router();
 

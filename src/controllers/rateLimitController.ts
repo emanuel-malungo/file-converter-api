@@ -1,6 +1,6 @@
 import type { Response } from 'express';
-import type { IAuthenticatedRequest } from '../interfaces/IAuthenticatedRequest';
-import { getRateLimitStatus } from '../middlewares/rateLimitMiddleware';
+import type { IAuthenticatedRequest } from '../interfaces/IAuthenticatedRequest.js';
+import { getRateLimitStatus } from '../middlewares/rateLimitMiddleware.js';
 
 export const getRateLimitStatusController = async (
   req: IAuthenticatedRequest,

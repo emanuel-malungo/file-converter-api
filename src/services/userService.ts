@@ -1,6 +1,6 @@
-import prisma from "../config/databse"
-import { generateApiKey } from "../utils/apiKeyUtils";
-import type IUser from "../interfaces/IUser";
+import prisma from "../config/databse.js"
+import { generateApiKey } from "../utils/apiKeyUtils.js";
+import type IUser from "../interfaces/IUser.js";
 
 export async function registerUser(email: string): Promise<IUser> {
   const apiKey = generateApiKey();

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import type { IAuthenticatedRequest } from "../interfaces/IAuthenticatedRequest";
-import { registerUser as registerUserService } from "../services/userService";
+import type { IAuthenticatedRequest } from "../interfaces/IAuthenticatedRequest.js";
+import { registerUser as registerUserService } from "../services/userService.js";
 
 export async function registerUser(req: Request, res: Response) {
   try {
