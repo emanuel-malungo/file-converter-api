@@ -8,6 +8,7 @@ import rateLimitRoutes from "./routes/rateLimitRoutes.js";
 import conversionRoutes from "./routes/conversionRoutes.js";
 import ocrRoutes from "./routes/ocrRoutes.js";
 import compressionRoutes from "./routes/compressionRoutes.js";
+import { setupSwagger } from "./config/swagger.js";
 
 dotenv.config();
 const app = express();
@@ -31,6 +32,9 @@ app.use("/api/ocr", ocrRoutes);
 
 // Rotas de compressão
 app.use("/api/compress", compressionRoutes);
+
+// Configurar Swagger
+setupSwagger(app);
 
 const PORT = process.env.PORT || 3000;
 

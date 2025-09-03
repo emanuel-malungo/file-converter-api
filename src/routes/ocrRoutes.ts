@@ -39,10 +39,107 @@ const upload = multer({
 // Middleware de rate limiting
 router.use(rateLimitMiddleware);
 
-// Rota principal para OCR
+/**
+ * @swagger
+ * /api/ocr:
+ *   post:
+ *     summary: Extrai texto de imagem usando OCR
+ *     tags: [OCR]
+ *     security:
+ *       - ApiKeyAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Imagem para extração de texto
+ *               language:
+ *                 type: string
+ *                 default: "eng"
+ *                 description: Idioma para reconhecimento (opcional)
+ *                 example: "eng"
+ *             required:
+ *               - image
+ *     responses:
+ *       200:
+ *         description: Texto extraído com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 text:
+ *                   type: string
+ *                   description: Texto extraído da imagem
+ *                 confidence:
+ *                   type: number
+ *                   description: Nível de confiança do OCR
+ *       400:
+ *         description: Dados inválidos ou arquivo não suportado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Não autorizado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       429:
+ *         description: Rate limit excedido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.post('/', upload.single('image'), OCRController.extractText);
 
-// Rota para obter idiomas suportados
+/**
+ * @swagger
+ * /api/ocr/languages:
+ *   get:
+ *     summary: Obtém lista de idiomas suportados para OCR
+ *     tags: [OCR]
+ *     security:
+ *       - ApiKeyAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de idiomas suportados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 languages:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       code:
+ *                         type: string
+ *                         example: "eng"
+ *                       name:
+ *                         type: string
+ *                         example: "English"
+ *       429:
+ *         description: Rate limit excedido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.get('/languages', OCRController.getLanguages);
 
 export default router;
